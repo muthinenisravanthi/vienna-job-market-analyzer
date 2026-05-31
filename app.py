@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
 import os
+import numpy as np
+import random
 
 st.set_page_config(
     page_title="Vienna Job Market Analyzer",
@@ -24,7 +26,6 @@ GRAY  = "#888888"
 
 @st.cache_data
 def load_data():
-    import os, random
     os.makedirs("data", exist_ok=True)
     if not os.path.exists("data/vienna_jobs.csv"):
         np.random.seed(42)
