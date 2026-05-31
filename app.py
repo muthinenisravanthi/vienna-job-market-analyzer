@@ -24,7 +24,31 @@ GRAY  = "#888888"
 
 @st.cache_data
 def load_data():
+    import os, random
+    os.makedirs("data", exist_ok=True)
+    if not os.path.exists("data/vienna_jobs.csv"):
+        np.random.seed(42)
+        random.seed(42)
+        roles = ["Software Engineer","Data Scientist","Frontend Developer","Backend Developer","Full Stack Developer","Data Analyst","Machine Learning Engineer","DevOps Engineer","Werkstudent IT","Werkstudent Data Science","Praktikum Frontend","Praktikum Data","Angular Developer","Python Developer"]
+        companies = ["Wien Energie","Raiffeisen Bank","A1 Telekom","OMV","Erste Group","Siemens Austria","Bosch Austria","IBM Austria","Microsoft Austria","Amazon Austria","Kapsch","AVL List","Red Bull","Verbund","Austrian Airlines","NHM Wien"]
+        job_types = ["Vollzeit","Teilzeit","Werkstudent","Praktikum","Remote","Hybrid"]
+        german_levels = ["Keine","A1","A2","B1","B2","C1","Muttersprachlich"]
+        skills_pool = ["Python","JavaScript","TypeScript","Angular","React","SQL","PostgreSQL","Docker","AWS","Machine Learning","Pandas","TensorFlow","REST API","Git","Agile","Power BI","Java","C#","Node.js","FastAPI"]
+        n = 500
+        data = {
+            "job_title": np.random.choice(roles, n),
+            "company": np.random.choice(companies, n),
+            "job_type": np.random.choice(job_types, n, p=[0.35,0.20,0.15,0.15,0.08,0.07]),
+            "german_required": np.random.choice(german_levels, n, p=[0.15,0.05,0.08,0.20,0.25,0.15,0.12]),
+            "salary_min": np.random.randint(1800, 4500, n),
+            "remote_possible": np.random.choice([True, False], n, p=[0.45,0.55]),
+            "skills_required": [", ".join(random.sample(skills_pool, random.randint(3,7))) for _ in range(n)]
+        }
+        df = pd.DataFrame(data)
+        df["salary_max"] = df["salary_min"] + np.random.randint(300, 1500, n)
+        df.to_csv("data/vienna_jobs.csv", index=False)
     return pd.read_csv("data/vienna_jobs.csv")
+    
 
 def main():
     st.title("🇦🇹 Vienna Tech Job Market Analyzer")
